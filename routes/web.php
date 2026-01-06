@@ -6,9 +6,8 @@ use App\Http\Controllers\GuruController;
 use App\Http\Controllers\AbsensiController;
 use App\Http\Controllers\LaporanController;
 
-Route::get('/', function () {
-    return view('dashboard');
-});
+
+Route::get('/dashboard', [DashboardController::class, 'index']);
 
 
 /* ===== GURU ===== */

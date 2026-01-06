@@ -20,14 +20,7 @@ class GuruController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'nip' => 'required',
-            'nama' => 'required',
-            'jenis_kelamin' => 'required'
-        ]);
-
         Guru::create($request->all());
-
         return redirect('/guru')->with('success', 'Data guru berhasil ditambahkan');
     }
 
@@ -36,7 +29,6 @@ class GuruController extends Controller
         $guru = Guru::findOrFail($id);
         return view('guru.edit', compact('guru'));
     }
-
 
     public function update(Request $request, $id)
     {
@@ -48,7 +40,7 @@ class GuruController extends Controller
 
     public function destroy($id)
     {
-        Guru::findOrFail($id)->delete();
+        Guru::destroy($id);
         return redirect('/guru')->with('success', 'Data guru berhasil dihapus');
     }
 }

@@ -18,9 +18,4 @@ class Guru extends Model
         'alamat',
         'no_hp'
     ];
-
-    public function absensis()
-    {
-        return $this->hasMany(Absensi::class, 'guru_id');
-    }
 }

@@ -35,6 +35,11 @@
                 <input type="text" name="no_hp" class="form-control">
             </div>
 
+            <div class="mb-3">
+                <label>Alamat</label>
+                <textarea name="alamat" class="form-control"></textarea>
+            </div>
+
             <button class="btn btn-primary">Simpan</button>
             <a href="/guru" class="btn btn-secondary">Kembali</a>
         </form>
