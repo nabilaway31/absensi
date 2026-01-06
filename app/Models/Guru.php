@@ -18,4 +18,10 @@ class Guru extends Model
         'alamat',
         'no_hp'
     ];
+
+    // relasi ke tabel absensis (dipanggil sebagai absensis())
+    public function absensis()
+    {
+        return $this->hasMany(Absensi::class, 'guru_id');
+    }
 }

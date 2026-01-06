@@ -1,72 +1,75 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Absensi Guru')</title>
 
-    <!-- Bootstrap -->
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <!-- SweetAlert -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
         body {
-            background-color: #f8f9fa;
-        }
-
-        .sidebar {
-            width: 240px;
-            min-height: 100vh;
-            background-color: #1f2a44;
-        }
-
-        .sidebar a {
-            color: #eaeaea;
-            text-decoration: none;
-        }
-
-        .sidebar a.active,
-        .sidebar a:hover {
-            background-color: #2e3c63;
-            color: #fff;
+            font-family: 'Inter', sans-serif;
         }
     </style>
 </head>
-<body>
 
-<div class="d-flex">
-    {{-- SIDEBAR --}}
-    @include('partials.sidebar')
+<body class="bg-gray-50">
 
-    {{-- CONTENT --}}
-    <div class="flex-fill p-4">
-        @yield('content')
+    <div class="flex min-h-screen">
+        {{-- SIDEBAR --}}
+        @include('partials.sidebar')
+
+        {{-- MAIN CONTENT --}}
+        <div class="flex-1 flex flex-col">
+            {{-- HEADER --}}
+            @include('partials.header')
+
+            {{-- CONTENT --}}
+            <main class="flex-1 p-3 lg:p-3">
+                @yield('content')
+            </main>
+        </div>
     </div>
-</div>
 
-{{-- SWEETALERT --}}
-@if(session('success'))
-<script>
-Swal.fire({
-    icon: 'success',
-    title: 'Berhasil',
-    text: '{{ session('success') }}',
-    timer: 2000,
-    showConfirmButton: false
-});
-</script>
-@endif
+    {{-- SWEETALERT --}}
+    @if(session('success'))
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil',
+                text: '{{ session('success') }}',
+                timer: 2000,
+                showConfirmButton: false,
+                customClass: {
+                    popup: 'rounded-lg'
+                }
+            });
+        </script>
+    @endif
 
-@if(session('error'))
-<script>
-Swal.fire({
-    icon: 'error',
-    title: 'Gagal',
-    text: '{{ session('error') }}'
-});
-</script>
-@endif
+    @if(session('error'))
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal',
+                text: '{{ session('error') }}',
+                customClass: {
+                    popup: 'rounded-lg'
+                }
+            });
+        </script>
+    @endif
 
 </body>
+
 </html>
