@@ -10,19 +10,19 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        // Total semua guru
+        // Hitung total guru
         $totalGuru = Guru::count();
 
-        // Total guru hadir hari ini
+        // Hitung guru hadir
         $hadir = Absensi::where('status', 'hadir')->count();
 
-        // Total guru izin hari ini
+        // Hitung guru izin
         $izin = Absensi::where('status', 'izin')->count();
 
-        // Total guru sakit hari ini
+        // Hitung guru sakit
         $sakit = Absensi::where('status', 'sakit')->count();
 
-        // Kirim semua data ke view
+        // Kirim semua variabel ke view
         return view('dashboard', compact('totalGuru', 'hadir', 'izin', 'sakit'));
     }
 }
