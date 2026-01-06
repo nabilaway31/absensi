@@ -11,6 +11,13 @@ class Absensi extends Model
 
     protected $table = 'absensis';
 
+    // allow mass assignment for these fields
+    protected $fillable = [
+        'guru_id',
+        'tanggal',
+        'status'
+    ];
+
     // relasi ke guru
     public function guru()
     {

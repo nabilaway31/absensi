@@ -28,7 +28,7 @@ class AbsensiController extends Controller
             'status' => 'required'
         ]);
 
-        Absensi::create($request->all());
+        Absensi::create($request->only('guru_id', 'tanggal', 'status'));
 
         return redirect('/absensi')->with('success', 'Absensi berhasil ditambahkan');
     }
@@ -43,7 +43,7 @@ class AbsensiController extends Controller
     public function update(Request $request, $id)
     {
         $absensi = Absensi::findOrFail($id);
-        $absensi->update($request->all());
+        $absensi->update($request->only('guru_id', 'tanggal', 'status'));
 
         return redirect('/absensi')->with('success', 'Absensi berhasil diupdate');
     }
