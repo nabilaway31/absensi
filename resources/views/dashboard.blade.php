@@ -13,7 +13,7 @@
             </div>
             <div>
                 <div class="text-sm font-medium text-gray-500">Total Guru</div>
-                <div class="mt-1 text-2xl font-bold text-gray-900">{{ $totalGuru }}</div>
+                <div class="mt-1 text-2xl font-bold text-gray-900">{{ $totalGuru ?? \App\Models\Guru::count() }}</div>
                 <div class="text-xs text-gray-400 mt-1">Keseluruhan data guru</div>
             </div>
         </div>
@@ -24,7 +24,7 @@
             </div>
             <div>
                 <div class="text-sm font-medium text-gray-500">Hadir</div>
-                <div class="mt-1 text-2xl font-bold text-gray-900">{{ $hadir }}</div>
+                <div class="mt-1 text-2xl font-bold text-gray-900">{{ $hadir ?? \App\Models\Absensi::where('status', 'hadir')->count() }}</div>
                 <div class="text-xs text-gray-400 mt-1">Jumlah hadir hari ini</div>
             </div>
         </div>
@@ -35,7 +35,7 @@
             </div>
             <div>
                 <div class="text-sm font-medium text-gray-500">Izin</div>
-                <div class="mt-1 text-2xl font-bold text-gray-900">{{ $izin }}</div>
+                <div class="mt-1 text-2xl font-bold text-gray-900">{{ $izin ?? \App\Models\Absensi::where('status', 'izin')->count() }}</div>
                 <div class="text-xs text-gray-400 mt-1">Jumlah izin hari ini</div>
             </div>
         </div>
@@ -46,7 +46,7 @@
             </div>
             <div>
                 <div class="text-sm font-medium text-gray-500">Sakit</div>
-                <div class="mt-1 text-2xl font-bold text-gray-900">{{ $sakit }}</div>
+                <div class="mt-1 text-2xl font-bold text-gray-900">{{ $sakit ?? \App\Models\Absensi::where('status', 'sakit')->count() }}</div>
                 <div class="text-xs text-gray-400 mt-1">Jumlah sakit hari ini</div>
             </div>
         </div>

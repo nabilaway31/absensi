@@ -12,8 +12,7 @@
                 </div>
                 <a href="/guru/tambah"
                     class="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm px-3 py-1.5 rounded">
-                    <i class="bi bi-plus-lg"></i>
-                    <span class="hidden sm:inline">Tambah</span>
+                    <span class="hidden sm:inline">Tambah Guru</span>
                 </a>
             </div>
 
