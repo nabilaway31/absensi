@@ -1,51 +1,47 @@
-@extends('layouts.app')
-
-@section('title', 'Dashboard')
-
-@section('content')
-<h4 class="mb-4">👋 Selamat Datang di Sistem Absensi Guru</h4>
-
-<div class="row g-4">
-
-    <div class="col-md-3">
-        <div class="card shadow border-0" style="background:#1f2a44;color:#f5f0e6">
-            <div class="card-body text-center">
-                <h1>👩‍🏫</h1>
-                <h5>Total Guru</h5>
-                <h3>{{ $jumlahGuru }}</h3>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard Absensi Guru</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <h1 class="mb-4">Dashboard Absensi Guru</h1>
+    
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card text-bg-primary mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Total Guru</h5>
+                    <p class="card-text">{{ $totalGuru }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-bg-success mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Hadir</h5>
+                    <p class="card-text">{{ $hadir }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-bg-warning mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Izin</h5>
+                    <p class="card-text">{{ $izin }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-bg-danger mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Sakit</h5>
+                    <p class="card-text">{{ $sakit }}</p>
+                </div>
             </div>
         </div>
     </div>
-
-    <div class="col-md-3">
-        <div class="card shadow border-0" style="background:#2c3e5c;color:#f5f0e6">
-            <div class="card-body text-center">
-                <h1>📝</h1>
-                <h5>Total Absensi</h5>
-                <h3>{{ $jumlahAbsensi }}</h3>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-3">
-        <div class="card shadow border-0" style="background:#3b82f6;color:white">
-            <div class="card-body text-center">
-                <h1>✅</h1>
-                <h5>Hadir</h5>
-                <h3>{{ $hadir }}</h3>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-3">
-        <div class="card shadow border-0" style="background:#ef4444;color:white">
-            <div class="card-body text-center">
-                <h1>❌</h1>
-                <h5>Alfa</h5>
-                <h3>{{ $alfa }}</h3>
-            </div>
-        </div>
-    </div>
-
 </div>
-@endsection
+</body>
+</html>
