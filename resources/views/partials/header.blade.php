@@ -1,5 +1,5 @@
 <header class="bg-white shadow-sm border-b border-gray-200">
-    <div class="px-6 lg:px-8 py-4">
+    <div class="px-6 lg:px-8 py-2">
         <div class="flex items-center justify-between">
             <!-- Page Title -->
             <div>
