@@ -2,18 +2,21 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Absensi extends Model
 {
+    use HasFactory;
+
     protected $table = 'absensis';
 
     protected $fillable = [
         'guru_id',
         'tanggal',
-        'jam_masuk',
-        'jam_pulang',
-        'status'
+        'status',
+        'jam_datang',
+        'jam_pulang'
     ];
 
     public function guru()

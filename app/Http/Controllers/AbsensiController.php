@@ -11,7 +11,14 @@ class AbsensiController extends Controller
     public function index()
     {
         $absensi = Absensi::with('guru')->latest()->get();
+
         return view('absensi.index', compact('absensi'));
+    }
+
+    public function userIndex()
+    {
+        $absensi = Absensi::with('guru')->latest()->get();
+        return view('user.absensi', compact('absensi'));
     }
 
     public function create()
@@ -23,12 +30,20 @@ class AbsensiController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'guru_id' => 'required',
-            'tanggal' => 'required',
-            'status' => 'required'
+            'guru_id' => 'required|exists:gurus,id',
+            'tanggal' => 'required|date',
+            'status' => 'required|in:Hadir,Izin,Sakit,Alfa',
+            'jam_datang' => 'nullable',
+            'jam_pulang' => 'nullable',
         ]);
 
-        Absensi::create($request->only('guru_id', 'tanggal', 'status'));
+        Absensi::create([
+            'guru_id' => $request->guru_id,
+            'tanggal' => $request->tanggal,
+            'status' => $request->status,
+            'jam_datang' => $request->jam_datang,
+            'jam_pulang' => $request->jam_pulang,
+        ]);
 
         return redirect('/absensi')->with('success', 'Absensi berhasil ditambahkan');
     }
@@ -37,13 +52,29 @@ class AbsensiController extends Controller
     {
         $absensi = Absensi::findOrFail($id);
         $guru = Guru::all();
+
         return view('absensi.edit', compact('absensi', 'guru'));
     }
 
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'guru_id' => 'required|exists:gurus,id',
+            'tanggal' => 'required|date',
+            'status' => 'required|in:Hadir,Izin,Sakit,Alfa',
+            'jam_datang' => 'nullable',
+            'jam_pulang' => 'nullable',
+        ]);
+
         $absensi = Absensi::findOrFail($id);
-        $absensi->update($request->only('guru_id', 'tanggal', 'status'));
+
+        $absensi->update([
+            'guru_id' => $request->guru_id,
+            'tanggal' => $request->tanggal,
+            'status' => $request->status,
+            'jam_datang' => $request->jam_datang,
+            'jam_pulang' => $request->jam_pulang,
+        ]);
 
         return redirect('/absensi')->with('success', 'Absensi berhasil diupdate');
     }
@@ -51,6 +82,7 @@ class AbsensiController extends Controller
     public function destroy($id)
     {
         Absensi::findOrFail($id)->delete();
+
         return redirect('/absensi')->with('success', 'Absensi berhasil dihapus');
     }
 }
