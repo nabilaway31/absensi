@@ -37,9 +37,9 @@ Route::middleware(['auth'])->group(function () {
     });
 
     /* ===== LAPORAN ===== */
-    Route::prefix('laporan')->name('laporan.')->group(function () {
-        Route::get('/', [LaporanController::class, 'index'])->name('index');
-        Route::get('/cetak', [LaporanController::class, 'cetak'])->name('cetak');
+    Route::prefix('laporan')->group(function () {
+        Route::get('/', [LaporanController::class, 'index'])->name('laporan.index');
+        Route::get('/cetak', [LaporanController::class, 'cetak'])->name('laporan.cetak');
     });
 
     /* ===== LOGOUT ===== */

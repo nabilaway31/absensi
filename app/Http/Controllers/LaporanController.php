@@ -2,35 +2,34 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Guru;
 use App\Models\Absensi;
-use PDF;
+use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 
 class LaporanController extends Controller
 {
     public function index()
     {
-        $laporan = Guru::withCount([
-            'absensis as hadir' => fn($q) => $q->where('status', 'Hadir'),
-            'absensis as izin'  => fn($q) => $q->where('status', 'Izin'),
-            'absensis as sakit' => fn($q) => $q->where('status', 'Sakit'),
-            'absensis as alfa'  => fn($q) => $q->where('status', 'Alfa'),
-        ])->get();
+        $laporan = Absensi::with('guru')->orderBy('tanggal', 'desc')->get();
 
-        return view('laporan.index', compact('laporan'));
+        return view('laporan.index', [
+            'laporan' => $laporan,
+            'tanggal' => Carbon::now()->format('d-m-Y'),
+            'jam' => Carbon::now()->format('H:i:s'),
+        ]);
     }
 
-    public function pdf()
+    public function cetakPdf()
     {
-        $laporan = Guru::withCount([
-            'absensis as hadir' => fn($q) => $q->where('status', 'Hadir'),
-            'absensis as izin'  => fn($q) => $q->where('status', 'Izin'),
-            'absensis as sakit' => fn($q) => $q->where('status', 'Sakit'),
-            'absensis as alfa'  => fn($q) => $q->where('status', 'Alfa'),
-        ])->get();
+        $laporan = Absensi::with('guru')->orderBy('tanggal', 'desc')->get();
 
-        $pdf = PDF::loadView('laporan.pdf', compact('laporan'));
+        $pdf = Pdf::loadView('laporan.pdf', [
+            'laporan' => $laporan,
+            'tanggal' => Carbon::now()->format('d-m-Y'),
+            'jam' => Carbon::now()->format('H:i:s'),
+        ])->setPaper('A4', 'portrait');
+
         return $pdf->download('laporan-absensi-guru.pdf');
     }
 }
