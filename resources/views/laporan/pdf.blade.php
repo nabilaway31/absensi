@@ -1,18 +1,25 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-    <title>Laporan Absensi Guru</title>
+    <meta charset="UTF-8">
+    <title>Laporan Absensi</title>
     <style>
         body {
-            font-family: DejaVu Sans;
+            font-family: sans-serif;
             font-size: 12px;
         }
         h2 {
             text-align: center;
+            margin-bottom: 5px;
+        }
+        p {
+            text-align: center;
+            margin-top: 0;
         }
         table {
             width: 100%;
             border-collapse: collapse;
+            margin-top: 15px;
         }
         th, td {
             border: 1px solid #000;
@@ -28,11 +35,7 @@
 <body>
 
 <h2>LAPORAN ABSENSI GURU</h2>
-
-<p>
-    Tanggal Cetak: <b>{{ $tanggal }}</b><br>
-    Jam Cetak: <b>{{ $jam }}</b>
-</p>
+<p>Tanggal Cetak: {{ $tanggal }} | Jam: {{ $jam }}</p>
 
 <table>
     <thead>
@@ -40,9 +43,9 @@
             <th>No</th>
             <th>Nama Guru</th>
             <th>Tanggal</th>
-            <th>Jam Masuk</th>
-            <th>Jam Pulang</th>
             <th>Status</th>
+            <th>Jam Datang</th>
+            <th>Jam Pulang</th>
         </tr>
     </thead>
     <tbody>
@@ -51,9 +54,9 @@
             <td>{{ $no + 1 }}</td>
             <td>{{ $l->guru->nama }}</td>
             <td>{{ $l->tanggal }}</td>
-            <td>{{ $l->jam_masuk ?? '-' }}</td>
-            <td>{{ $l->jam_pulang ?? '-' }}</td>
             <td>{{ $l->status }}</td>
+            <td>{{ $l->jam_datang ?? '-' }}</td>
+            <td>{{ $l->jam_pulang ?? '-' }}</td>
         </tr>
         @endforeach
     </tbody>

@@ -3,61 +3,73 @@
 @section('title', 'Edit Absensi')
 
 @section('content')
-    <div class="w-full">
-        <div class="bg-white shadow rounded-lg overflow-hidden border border-gray-200">
-            <div class="px-4 py-3 bg-gray-800 text-white flex items-center gap-3">
-                <i class="bi bi-journal-check text-lg"></i>
-                <h5 class="text-lg font-semibold">Edit Absensi</h5>
-            </div>
-
-            <div class="p-6">
-                <form action="/absensi/update/{{ $absensi->id }}" method="POST" class="space-y-4">
-                    @csrf
-
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Nama Guru</label>
-                        <select name="guru_id" required
-                            class="mt-1 block w-full rounded-md border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                            @foreach ($guru as $g)
-                                <option value="{{ $g->id }}" {{ $absensi->guru_id == $g->id ? 'selected' : '' }}>
-                                    {{ $g->nama }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">Tanggal</label>
-                            <input type="date" name="tanggal"
-                                class="mt-1 block w-full rounded-md border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                                value="{{ old('tanggal', $absensi->tanggal ?? date('Y-m-d')) }}" required>
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">Status</label>
-                            <select name="status"
-                                class="mt-1 block w-full rounded-md border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                                <option value="Hadir" {{ $absensi->status == 'Hadir' ? 'selected' : '' }}>Hadir</option>
-                                <option value="Izin" {{ $absensi->status == 'Izin' ? 'selected' : '' }}>Izin</option>
-                                <option value="Sakit" {{ $absensi->status == 'Sakit' ? 'selected' : '' }}>Sakit</option>
-                                <option value="Alfa" {{ $absensi->status == 'Alfa' ? 'selected' : '' }}>Alfa</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="flex items-center gap-2">
-                        <button
-                            class="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded">
-                            <i class="bi bi-save"></i> Update
-                        </button>
-                        <a href="/absensi"
-                            class="inline-flex items-center gap-2 bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded">
-                            <i class="bi bi-arrow-left"></i> Kembali
-                        </a>
-                    </div>
-                </form>
-            </div>
-        </div>
+<div class="card shadow border-0">
+    <div class="card-header text-white d-flex align-items-center gap-2" style="background:#1f2a44">
+        <i class="bi bi-journal-check fs-5"></i>
+        <h5 class="mb-0">Edit Absensi Guru</h5>
     </div>
+
+    <div class="card-body">
+        <form action="/absensi/update/{{ $absensi->id }}" method="POST">
+            @csrf
+
+            {{-- Guru --}}
+            <div class="mb-3">
+                <label class="form-label">Nama Guru</label>
+                <select name="guru_id" class="form-control" required>
+                    @foreach ($guru as $g)
+                        <option value="{{ $g->id }}" {{ $absensi->guru_id == $g->id ? 'selected' : '' }}>
+                            {{ $g->nama }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            {{-- Tanggal & Status --}}
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Tanggal</label>
+                    <input type="date" name="tanggal" class="form-control"
+                        value="{{ old('tanggal', $absensi->tanggal) }}" required>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Status</label>
+                    <select name="status" class="form-control" required>
+                        <option value="Hadir" {{ $absensi->status == 'Hadir' ? 'selected' : '' }}>Hadir</option>
+                        <option value="Izin" {{ $absensi->status == 'Izin' ? 'selected' : '' }}>Izin</option>
+                        <option value="Sakit" {{ $absensi->status == 'Sakit' ? 'selected' : '' }}>Sakit</option>
+                        <option value="Alfa" {{ $absensi->status == 'Alfa' ? 'selected' : '' }}>Alfa</option>
+                    </select>
+                </div>
+            </div>
+
+            {{-- Jam Datang & Pulang --}}
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Jam Datang</label>
+                    <input type="time" name="jam_datang" class="form-control"
+                        value="{{ old('jam_datang', $absensi->jam_datang) }}">
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Jam Pulang</label>
+                    <input type="time" name="jam_pulang" class="form-control"
+                        value="{{ old('jam_pulang', $absensi->jam_pulang) }}">
+                </div>
+            </div>
+
+            {{-- Tombol --}}
+            <div class="mt-4">
+                <button type="submit" class="btn btn-primary">
+                    💾 Update
+                </button>
+                <a href="/absensi" class="btn btn-secondary">
+                    ⬅ Kembali
+                </a>
+            </div>
+
+        </form>
+    </div>
+</div>
 @endsection
