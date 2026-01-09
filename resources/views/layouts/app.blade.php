@@ -8,9 +8,13 @@
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
     <!-- SweetAlert -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -19,6 +23,19 @@
 
         body {
             font-family: 'Inter', sans-serif;
+        }
+
+        /* 🔥 FIX: Header selalu di atas konten */
+        header,
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 1050;
+        }
+
+        /* 🔥 FIX: Konten tidak menabrak header */
+        main {
+            overflow-x: auto;
         }
     </style>
 </head>
@@ -32,7 +49,9 @@
         {{-- MAIN CONTENT --}}
         <div class="flex-1 flex flex-col">
             {{-- HEADER --}}
-            @include('partials.header')
+            <div class="sticky top-0 z-[1050]">
+                @include('partials.header')
+            </div>
 
             {{-- CONTENT --}}
             <main class="flex-1 p-3 lg:p-3">
@@ -41,7 +60,7 @@
         </div>
     </div>
 
-    {{-- SWEETALERT --}}
+    {{-- SWEETALERT SUCCESS --}}
     @if(session('success'))
         <script>
             Swal.fire({
@@ -57,6 +76,7 @@
         </script>
     @endif
 
+    {{-- SWEETALERT ERROR --}}
     @if(session('error'))
         <script>
             Swal.fire({

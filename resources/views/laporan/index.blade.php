@@ -3,7 +3,7 @@
 @section('title', 'Laporan Absensi')
 
 @section('content')
-<div class="card shadow border-0">
+<div class="card shadow shadow-4">
     <div class="card-header d-flex justify-content-between align-items-center"
         style="background:#1f2a44;color:#f6f1e9">
         <h5 class="mb-0">📊 Laporan Absensi Guru</h5>
