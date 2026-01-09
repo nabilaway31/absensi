@@ -5,24 +5,44 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Guru;
 use App\Models\Absensi;
+use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
     public function index()
     {
+        // Tanggal hari ini
+        $today = Carbon::today();
+
         // Hitung total guru
         $totalGuru = Guru::count();
 
-        // Hitung guru hadir
-        $hadir = Absensi::where('status', 'hadir')->count();
+        // Hitung absensi berdasarkan status (hari ini)
+        $hadir = Absensi::whereDate('tanggal', $today)
+                        ->where('status', 'Hadir')
+                        ->count();
 
-        // Hitung guru izin
-        $izin = Absensi::where('status', 'izin')->count();
+        $izin = Absensi::whereDate('tanggal', $today)
+                       ->where('status', 'Izin')
+                       ->count();
 
-        // Hitung guru sakit
-        $sakit = Absensi::where('status', 'sakit')->count();
+        $sakit = Absensi::whereDate('tanggal', $today)
+                        ->where('status', 'Sakit')
+                        ->count();
 
-        // Kirim semua variabel ke view
-        return view('dashboard', compact('totalGuru', 'hadir', 'izin', 'sakit'));
+        // Data absensi hari ini untuk tabel dashboard
+        $absensiHariIni = Absensi::with('guru')
+                                ->whereDate('tanggal', $today)
+                                ->latest()
+                                ->get();
+
+        // Kirim ke view dashboard
+        return view('dashboard', compact(
+            'totalGuru',
+            'hadir',
+            'izin',
+            'sakit',
+            'absensiHariIni'
+        ));
     }
 }
