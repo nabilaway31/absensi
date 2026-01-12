@@ -7,7 +7,7 @@ use App\Http\Controllers\GuruAbsensiController;
 use App\Http\Controllers\GuruController;
 use App\Http\Controllers\GuruDashboardController;
 use App\Http\Controllers\GuruProfilController;
-/* ================= CONTROLLER GURU / USER ================= */
+/* ================= CONTROLLER GURU ================= */
 use App\Http\Controllers\LaporanController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -16,27 +16,31 @@ require __DIR__.'/auth.php';
 
 /*
 |--------------------------------------------------------------------------
-| ROUTE SETELAH LOGIN
+| REDIRECT SETELAH LOGIN
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth'])->group(function () {
+Route::get('/', function () {
+    if (! Auth::check()) {
+        return redirect('/login');
+    }
 
-    /*
-    |--------------------------------------------------------------------------
-    | DASHBOARD ADMIN
-    |--------------------------------------------------------------------------
-    */
-    Route::get('/', [DashboardController::class, 'index'])
-        ->name('home');
+    return Auth::user()->role === 'admin'
+        ? redirect('/dashboard')
+        : redirect('/guru-user/dashboard');
+});
 
+/*
+|--------------------------------------------------------------------------
+| ======================= ADMIN =======================
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['auth', 'role.admin'])->group(function () {
+
+    /* Dashboard Admin */
     Route::get('/dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');
 
-    /*
-    |--------------------------------------------------------------------------
-    | MASTER DATA GURU (ADMIN)
-    |--------------------------------------------------------------------------
-    */
+    /* Master Data Guru */
     Route::prefix('guru')->name('guru.')->group(function () {
         Route::get('/', [GuruController::class, 'index'])->name('index');
         Route::get('/tambah', [GuruController::class, 'create'])->name('create');
@@ -46,11 +50,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/hapus/{id}', [GuruController::class, 'destroy'])->name('destroy');
     });
 
-    /*
-    |--------------------------------------------------------------------------
-    | ABSENSI (ADMIN)
-    |--------------------------------------------------------------------------
-    */
+    /* Absensi Admin */
     Route::prefix('absensi')->name('absensi.')->group(function () {
         Route::get('/', [AbsensiController::class, 'index'])->name('index');
         Route::get('/tambah', [AbsensiController::class, 'create'])->name('create');
@@ -60,39 +60,39 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/hapus/{id}', [AbsensiController::class, 'destroy'])->name('destroy');
     });
 
-    /*
-    |--------------------------------------------------------------------------
-    | LAPORAN ABSENSI (ADMIN)
-    |--------------------------------------------------------------------------
-    */
+    /* Laporan */
     Route::prefix('laporan')->name('laporan.')->group(function () {
         Route::get('/', [LaporanController::class, 'index'])->name('index');
         Route::get('/cetak', [LaporanController::class, 'cetak'])->name('cetak');
     });
+});
 
-    /*
-    |--------------------------------------------------------------------------
-    | ================== GURU / USER ==================
-    |--------------------------------------------------------------------------
-    */
-    Route::prefix('guru-user')->name('guru_user.')->group(function () {
+/*
+|--------------------------------------------------------------------------
+| ======================= GURU ========================
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['auth', 'role.guru'])
+    ->prefix('guru-user')
+    ->name('guru_user.')
+    ->group(function () {
 
-        // Dashboard Guru
+        /* Dashboard Guru */
         Route::get('/dashboard', [GuruDashboardController::class, 'index'])
             ->name('dashboard');
 
-        // Absensi Guru
+        /* Absensi Guru */
         Route::post('/absen-masuk', [GuruAbsensiController::class, 'absenMasuk'])
             ->name('absen.masuk');
 
         Route::post('/absen-pulang', [GuruAbsensiController::class, 'absenPulang'])
             ->name('absen.pulang');
 
-        // Rekap Absensi Individu
+        /* Rekap Individu */
         Route::get('/rekap', [GuruAbsensiController::class, 'rekap'])
             ->name('rekap');
 
-        // Profil Guru
+        /* Profil Guru */
         Route::get('/profil', [GuruProfilController::class, 'index'])
             ->name('profil');
 
@@ -100,14 +100,13 @@ Route::middleware(['auth'])->group(function () {
             ->name('profil.update');
     });
 
-    /*
-    |--------------------------------------------------------------------------
-    | LOGOUT
-    |--------------------------------------------------------------------------
-    */
-    Route::post('/logout', function () {
-        Auth::logout();
+/*
+|--------------------------------------------------------------------------
+| LOGOUT
+|--------------------------------------------------------------------------
+*/
+Route::post('/logout', function () {
+    Auth::logout();
 
-        return redirect('/login');
-    })->name('logout');
-});
+    return redirect('/login');
+})->name('logout');
