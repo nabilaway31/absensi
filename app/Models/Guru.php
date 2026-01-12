@@ -9,9 +9,8 @@ class Guru extends Model
 {
     use HasFactory;
 
-    protected $table = 'gurus';
-
     protected $fillable = [
+        'user_id',
         'nip',
         'nama',
         'jenis_kelamin',
@@ -19,9 +18,13 @@ class Guru extends Model
         'no_hp'
     ];
 
-    // relasi ke tabel absensis (dipanggil sebagai absensis())
-    public function absensis()
+    public function user()
     {
-        return $this->hasMany(Absensi::class, 'guru_id');
+        return $this->belongsTo(User::class);
+    }
+
+    public function absensi()
+    {
+        return $this->hasMany(Absensi::class);
     }
 }
