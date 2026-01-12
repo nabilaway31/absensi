@@ -14,7 +14,8 @@ class GuruAbsensiController extends Controller
      * =========================
      * ABSEN MASUK
      * Jam masuk otomatis
-     * Telat jika > 07:00
+     * TELAT jika > 07:00
+     * Dikunci 05:00 - 09:00
      * =========================
      */
     public function absenMasuk(Request $request)
@@ -23,6 +24,11 @@ class GuruAbsensiController extends Controller
 
         $tanggal = Carbon::today()->format('Y-m-d');
         $jamSekarang = Carbon::now()->format('H:i');
+
+        // 🔒 Kunci jam absen masuk
+        if ($jamSekarang < '05:00' || $jamSekarang > '09:00') {
+            return back()->with('error', 'Absen masuk hanya bisa antara jam 05:00 - 09:00');
+        }
 
         // Cek sudah absen atau belum
         $cek = Absensi::where('guru_id', $guru->id)
@@ -34,7 +40,7 @@ class GuruAbsensiController extends Controller
         }
 
         // Status otomatis
-        $status = ($jamSekarang > '07:00') ? 'Alfa' : 'Hadir';
+        $status = ($jamSekarang > '07:00') ? 'Telat' : 'Hadir';
 
         Absensi::create([
             'guru_id' => $guru->id,
@@ -71,8 +77,9 @@ class GuruAbsensiController extends Controller
             return back()->with('error', 'Anda sudah absen pulang');
         }
 
+        // 🔒 Kunci jam pulang
         if ($jamSekarang < '15:00') {
-            return back()->with('error', 'Belum waktunya pulang');
+            return back()->with('error', 'Absen pulang hanya bisa setelah jam 15:00');
         }
 
         $absensi->update([
@@ -85,13 +92,31 @@ class GuruAbsensiController extends Controller
     /**
      * =========================
      * REKAP ABSENSI INDIVIDU
+     * + FILTER BULAN, TAHUN, STATUS
      * =========================
      */
-    public function rekap()
+    public function rekap(Request $request)
     {
         $guru = Guru::where('user_id', Auth::id())->firstOrFail();
 
-        $absensi = Absensi::where('guru_id', $guru->id)
+        $query = Absensi::where('guru_id', $guru->id);
+
+        // Filter bulan
+        if ($request->filled('bulan')) {
+            $query->whereMonth('tanggal', $request->bulan);
+        }
+
+        // Filter tahun
+        if ($request->filled('tahun')) {
+            $query->whereYear('tanggal', $request->tahun);
+        }
+
+        // Filter status
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $absensi = $query
             ->orderBy('tanggal', 'desc')
             ->get();
 
