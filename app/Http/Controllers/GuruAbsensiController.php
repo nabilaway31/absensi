@@ -10,6 +10,9 @@ use Illuminate\Support\Facades\Auth;
 
 class GuruAbsensiController extends Controller
 {
+    // Konstanta batas jam masuk (format 24 jam)
+    const JAM_BATAS_MASUK = '07:30';
+
     /**
      * =========================
      * ABSEN MASUK
@@ -39,17 +42,23 @@ class GuruAbsensiController extends Controller
             return back()->with('error', 'Anda sudah absen hari ini');
         }
 
-        // Status otomatis
-        $status = ($jamSekarang > '07:00') ? 'Telat' : 'Hadir';
+        // Tentukan status: Hadir atau Telat
+        $jamMasuk = Carbon::now()->format('H:i');
+        $status = ($jamMasuk > self::JAM_BATAS_MASUK) ? 'Telat' : 'Hadir';
 
+        // Simpan absensi
         Absensi::create([
             'guru_id' => $guru->id,
             'tanggal' => $tanggal,
-            'jam_masuk' => $jamSekarang,
+            'jam_datang' => $jamSekarang,
             'status' => $status,
         ]);
 
-        return back()->with('success', 'Absen masuk berhasil');
+        $message = $status === 'Telat'
+            ? "Absen masuk berhasil! Anda terlambat. Batas jam masuk: " . self::JAM_BATAS_MASUK
+            : "Absen masuk berhasil!";
+
+        return back()->with('success', $message);
     }
 
     /**
@@ -69,7 +78,7 @@ class GuruAbsensiController extends Controller
             ->where('tanggal', $tanggal)
             ->first();
 
-        if (! $absensi) {
+        if (!$absensi) {
             return back()->with('error', 'Anda belum absen masuk');
         }
 

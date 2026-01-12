@@ -19,25 +19,25 @@ class DashboardController extends Controller
 
         // Hitung absensi berdasarkan status (hari ini)
         $hadir = Absensi::whereDate('tanggal', $today)
-                        ->where('status', 'Hadir')
-                        ->count();
+            ->where('status', 'Hadir')
+            ->count();
 
         $izin = Absensi::whereDate('tanggal', $today)
-                       ->where('status', 'Izin')
-                       ->count();
+            ->where('status', 'Izin')
+            ->count();
 
         $sakit = Absensi::whereDate('tanggal', $today)
-                        ->where('status', 'Sakit')
-                        ->count();
+            ->where('status', 'Sakit')
+            ->count();
 
         // Data absensi hari ini untuk tabel dashboard
         $absensiHariIni = Absensi::with('guru')
-                                ->whereDate('tanggal', $today)
-                                ->latest()
-                                ->get();
+            ->whereDate('tanggal', $today)
+            ->latest()
+            ->get();
 
-        // Kirim ke view dashboard
-        return view('dashboard', compact(
+        // Kirim ke view dashboard (menggunakan namespace folder admin)
+        return view('admin.dashboard', compact(
             'totalGuru',
             'hadir',
             'izin',

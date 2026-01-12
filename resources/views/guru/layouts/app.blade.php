@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Absensi Guru')</title>
+    <title>@yield('title', 'Portal Guru')</title>
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -25,7 +25,6 @@
             font-family: 'Inter', sans-serif;
         }
 
-        /* 🔥 FIX: Header selalu di atas konten */
         header,
         nav {
             position: sticky;
@@ -33,7 +32,6 @@
             z-index: 1050;
         }
 
-        /* 🔥 FIX: Konten tidak menabrak header */
         main {
             overflow-x: auto;
         }
@@ -42,19 +40,19 @@
 
 <body class="bg-gray-50">
 
-    <div class="flex min-h-screen">
+    <div class="flex min-h-screen w-full">
         {{-- SIDEBAR --}}
-        @include('partials.sidebar')
+        @include('guru.layouts.sidebar')
 
         {{-- MAIN CONTENT --}}
-        <div class="flex-1 flex flex-col">
+        <div class="flex-1 flex flex-col w-full">
             {{-- HEADER --}}
             <div class="sticky top-0 z-[1050]">
-                @include('partials.header')
+                @include('guru.layouts.header')
             </div>
 
             {{-- CONTENT --}}
-            <main class="flex-1 p-3 lg:p-3">
+            <main class="flex-1 p-3 lg:p-6 w-full">
                 @yield('content')
             </main>
         </div>

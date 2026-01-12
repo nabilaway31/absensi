@@ -60,18 +60,24 @@ Route::middleware('auth')->group(function () {
         ->middleware(['signed', 'throttle:6,1'])
         ->name('verification.verify');
 
-    Route::post('/email/verification-notification',
-        [EmailVerificationNotificationController::class, 'store'])
+    Route::post(
+        '/email/verification-notification',
+        [EmailVerificationNotificationController::class, 'store']
+    )
         ->middleware('throttle:6,1')
         ->name('verification.send');
 
     // Konfirmasi password
-    Route::get('/confirm-password',
-        [ConfirmablePasswordController::class, 'show'])
+    Route::get(
+        '/confirm-password',
+        [ConfirmablePasswordController::class, 'show']
+    )
         ->name('password.confirm');
 
-    Route::post('/confirm-password',
-        [ConfirmablePasswordController::class, 'store']);
+    Route::post(
+        '/confirm-password',
+        [ConfirmablePasswordController::class, 'store']
+    );
 
     // Update password
     Route::put('/password', [PasswordController::class, 'update'])
@@ -80,4 +86,12 @@ Route::middleware('auth')->group(function () {
     // Logout
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');
+});
+
+// Route tambahan untuk redirect berdasarkan role setelah login
+Route::middleware('auth')->group(function () {
+    Route::get('/dashboard', function () {
+        // Ganti dengan route yang sesuai berdasarkan role
+        return redirect()->route('admin.dashboard');
+    })->name('dashboard');
 });

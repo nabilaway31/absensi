@@ -20,7 +20,7 @@ class LaporanController extends Controller
             ->orderBy('tanggal', 'desc')
             ->get();
 
-        return view('laporan.index', compact('laporan'));
+        return view('admin.laporan.index', compact('laporan'));
     }
 
     /**
@@ -36,12 +36,12 @@ class LaporanController extends Controller
 
         // Tanggal & jam cetak
         $tanggal = Carbon::now()->translatedFormat('d F Y');
-        $jam     = Carbon::now()->format('H:i');
+        $jam = Carbon::now()->format('H:i');
 
-        $pdf = Pdf::loadView('laporan.pdf', [
+        $pdf = Pdf::loadView('admin.laporan.pdf', [
             'laporan' => $laporan,
             'tanggal' => $tanggal,
-            'jam'     => $jam,
+            'jam' => $jam,
         ])->setPaper('A4', 'landscape');
 
         return $pdf->download('laporan-absensi-guru.pdf');

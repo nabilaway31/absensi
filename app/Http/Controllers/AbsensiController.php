@@ -12,7 +12,7 @@ class AbsensiController extends Controller
     {
         $absensi = Absensi::with('guru')->latest()->get();
 
-        return view('absensi.index', compact('absensi'));
+        return view('admin.absensi.index', compact('absensi'));
     }
 
     public function userIndex()
@@ -24,7 +24,7 @@ class AbsensiController extends Controller
     public function create()
     {
         $guru = Guru::all();
-        return view('absensi.create', compact('guru'));
+        return view('admin.absensi.create', compact('guru'));
     }
 
     public function store(Request $request)
@@ -45,7 +45,7 @@ class AbsensiController extends Controller
             'jam_pulang' => $request->jam_pulang,
         ]);
 
-        return redirect('/absensi')->with('success', 'Absensi berhasil ditambahkan');
+        return redirect()->route('absensi.index')->with('success', 'Absensi berhasil ditambahkan');
     }
 
     public function edit($id)
@@ -76,13 +76,13 @@ class AbsensiController extends Controller
             'jam_pulang' => $request->jam_pulang,
         ]);
 
-        return redirect('/absensi')->with('success', 'Absensi berhasil diupdate');
+        return redirect()->route('absensi.index')->with('success', 'Absensi berhasil diupdate');
     }
 
     public function destroy($id)
     {
         Absensi::findOrFail($id)->delete();
 
-        return redirect('/absensi')->with('success', 'Absensi berhasil dihapus');
+        return redirect()->route('absensi.index')->with('success', 'Absensi berhasil dihapus');
     }
 }

@@ -22,6 +22,7 @@ class GuruDashboardController extends Controller
             ->where('tanggal', $hariIni)
             ->first();
 
+        // tampilkan view yang benar (folder guru/dashboard/index.blade.php)
         return view('guru.dashboard', compact(
             'guru',
             'absensiHariIni',

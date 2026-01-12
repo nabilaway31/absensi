@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use App\Http\Requests\LoginRequest;
+use Illuminate\Http\RedirectResponse;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -20,34 +22,30 @@ class AuthenticatedSessionController extends Controller
     /**
      * Handle an authentication attempt.
      */
-    public function store(Request $request)
+    public function store(LoginRequest $request): RedirectResponse
     {
-        $credentials = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required'],
-        ]);
+        $request->authenticate();
 
-        if (Auth::attempt($credentials, $request->boolean('remember'))) {
-            $request->session()->regenerate();
+        $request->session()->regenerate();
 
+        // Redirect berdasarkan role
+        if ($request->user()->isAdmin()) {
             return redirect()->intended(route('dashboard'));
         }
 
-        return back()->withErrors([
-            'email' => __('The provided credentials do not match our records.'),
-        ]);
+        return redirect()->intended(route('guru_user.dashboard'));
     }
 
     /**
      * Destroy an authenticated session.
      */
-    public function destroy(Request $request)
+    public function destroy(Request $request): RedirectResponse
     {
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('dashboard');
+        return redirect()->route('login');
     }
 }
