@@ -11,21 +11,24 @@ class GuruDashboardController extends Controller
 {
     public function index()
     {
-        // Ambil data guru dari user login
+        // Ambil guru dari user login
         $guru = Guru::where('user_id', Auth::id())->firstOrFail();
 
-        // Tanggal hari ini (AMAN)
-        $hariIni = Carbon::today();
+        // Tanggal & jam sekarang
+        $hariIni = Carbon::now()->toDateString();
+        $jamSekarang = Carbon::now()->format('H:i:s');
 
-        // Ambil absensi hari ini
+        // Absensi hari ini
         $absensiHariIni = Absensi::where('guru_id', $guru->id)
-            ->whereDate('tanggal', $hariIni)
+            ->where('tanggal', $hariIni)
             ->first();
 
+        // KIRIM SEMUA KE VIEW
         return view('guru.dashboard', compact(
             'guru',
             'absensiHariIni',
-            'hariIni'
+            'hariIni',
+            'jamSekarang'
         ));
     }
 }
