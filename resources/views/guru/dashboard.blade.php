@@ -109,11 +109,11 @@
                         <div class="text-right">
                             @if($absensiHariIni->jam_datang)
                             <p class="text-sm text-gray-600">Jam Masuk</p>
-                            <p class="text-xl font-bold text-gray-900">{{ $absensiHariIni->jam_datang }}</p>
+                            <p class="text-xl font-bold text-gray-900">{{ \Carbon\Carbon::parse($absensiHariIni->jam_datang)->format('H:i') }}</p>
                             @endif
                             @if($absensiHariIni->jam_pulang)
                             <p class="text-sm text-gray-600 mt-2">Jam Pulang</p>
-                            <p class="text-xl font-bold text-gray-900">{{ $absensiHariIni->jam_pulang }}</p>
+                            <p class="text-xl font-bold text-gray-900">{{ \Carbon\Carbon::parse($absensiHariIni->jam_pulang)->format('H:i') }}</p>
                             @endif
                         </div>
                     </div>
