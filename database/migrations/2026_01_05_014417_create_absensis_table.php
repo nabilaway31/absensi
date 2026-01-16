@@ -11,11 +11,16 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('guru_id')->constrained('gurus')->onDelete('cascade');
             $table->date('tanggal');
-            $table->enum('status', ['Hadir', 'Izin', 'Sakit', 'Alfa']);
+            $table->enum('status', ['Hadir', 'Telat', 'Izin', 'Sakit', 'Alfa']);
             $table->time('jam_datang')->nullable();
             $table->time('jam_pulang')->nullable();
-            $table->timestamps();
+            $table->text('keterangan')->nullable();
+            $table->string('bukti')->nullable();
+            $table->enum('approval_status', ['pending', 'approved', 'rejected'])
+                ->default('pending');
 
+            $table->text('approval_note')->nullable();
+            $table->timestamps();
             $table->unique(['guru_id', 'tanggal']);
         });
     }

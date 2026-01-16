@@ -14,12 +14,26 @@ class LaporanController extends Controller
      * TAMPILAN LAPORAN (WEB)
      * =========================
      */
-    public function index()
+    public function index(Request $request)
     {
-        $laporan = Absensi::with('guru')
-            ->orderBy('tanggal', 'desc')
-            ->get();
+        $query = Absensi::with('guru');
 
+        if ($request->filled('from') && $request->filled('to')) {
+            $query->whereBetween('tanggal', [$request->from, $request->to]);
+        } elseif ($request->filled('from')) {
+            $query->whereDate('tanggal', '>=', $request->from);
+        } elseif ($request->filled('to')) {
+            $query->whereDate('tanggal', '<=', $request->to);
+        }
+
+        if ($request->filled('q')) {
+            $q = $request->q;
+            $query->whereHas('guru', function ($sub) use ($q) {
+                $sub->where('nama', 'like', "%$q%")->orWhere('nip', 'like', "%$q%");
+            });
+        }
+
+        $laporan = $query->orderBy('tanggal', 'desc')->paginate(15);
         return view('admin.laporan.index', compact('laporan'));
     }
 
@@ -30,9 +44,17 @@ class LaporanController extends Controller
      */
     public function cetak()
     {
-        $laporan = Absensi::with('guru')
-            ->orderBy('tanggal', 'desc')
-            ->get();
+        // Terima filter dari query string (sama seperti index)
+        $request = request();
+        $query = Absensi::with('guru');
+        if ($request->filled('from') && $request->filled('to')) {
+            $query->whereBetween('tanggal', [$request->from, $request->to]);
+        } elseif ($request->filled('from')) {
+            $query->whereDate('tanggal', '>=', $request->from);
+        } elseif ($request->filled('to')) {
+            $query->whereDate('tanggal', '<=', $request->to);
+        }
+        $laporan = $query->orderBy('tanggal', 'desc')->get();
 
         // Tanggal & jam cetak
         $tanggal = Carbon::now()->translatedFormat('d F Y');

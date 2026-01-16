@@ -9,6 +9,7 @@ use App\Http\Controllers\GuruDashboardController;
 use App\Http\Controllers\GuruProfilController;
 /* ================= CONTROLLER GURU ================= */
 use App\Http\Controllers\LaporanController;
+use App\Http\Controllers\GuruIzinController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -38,6 +39,9 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
     Route::prefix('absensi')->name('absensi.')->group(function () {
         Route::get('/', [AbsensiController::class, 'index'])->name('index');
+        Route::get('/show/{id}', [AbsensiController::class, 'show'])->name('show');
+        Route::post('/approve/{id}', [AbsensiController::class, 'approve'])->name('approve');
+        Route::post('/reject/{id}', [AbsensiController::class, 'reject'])->name('reject');
         Route::get('/tambah', [AbsensiController::class, 'create'])->name('create');
         Route::post('/simpan', [AbsensiController::class, 'store'])->name('store');
         Route::get('/edit/{id}', [AbsensiController::class, 'edit'])->name('edit');
@@ -78,6 +82,13 @@ Route::middleware(['auth', 'role:guru'])
 
         Route::post('/profil/update', [GuruProfilController::class, 'update'])
             ->name('profil.update');
+
+        // Izin / Sakit (Guru)
+        Route::prefix('izin')->name('izin.')->group(function () {
+            Route::get('/', [GuruIzinController::class, 'index'])->name('index');
+            Route::get('/tambah', [GuruIzinController::class, 'create'])->name('create');
+            Route::post('/simpan', [GuruIzinController::class, 'store'])->name('store');
+        });
     });
 
 /*

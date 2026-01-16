@@ -14,10 +14,18 @@ class AbsensiController extends Controller
      ===================================================== */
 
     // Tampilkan semua absensi (Admin)
-    public function index()
+    public function index(Request $request)
     {
-        $absensi = Absensi::with('guru')->latest()->get();
+        $query = Absensi::with('guru');
 
+        if ($request->filled('q')) {
+            $q = $request->q;
+            $query->whereHas('guru', function ($sub) use ($q) {
+                $sub->where('nama', 'like', "%$q%")->orWhere('nip', 'like', "%$q%");
+            });
+        }
+
+        $absensi = $query->orderBy('tanggal', 'desc')->paginate(15);
         return view('admin.absensi.index', compact('absensi'));
     }
 
@@ -35,7 +43,7 @@ class AbsensiController extends Controller
         $request->validate([
             'guru_id' => 'required|exists:gurus,id',
             'tanggal' => 'required|date',
-            'status' => 'required|in:Hadir,Izin,Sakit,Alfa',
+            'status' => 'required|in:Hadir,Telat,Izin,Sakit,Alfa',
             'jam_datang' => 'nullable',
             'jam_pulang' => 'nullable',
         ]);
@@ -67,7 +75,7 @@ class AbsensiController extends Controller
         $request->validate([
             'guru_id' => 'required|exists:gurus,id',
             'tanggal' => 'required|date',
-            'status' => 'required|in:Hadir,Izin,Sakit,Alfa',
+            'status' => 'required|in:Hadir,Telat,Izin,Sakit,Alfa',
             'jam_datang' => 'nullable',
             'jam_pulang' => 'nullable',
         ]);
@@ -93,6 +101,39 @@ class AbsensiController extends Controller
 
         return redirect()->route('absensi.index')
             ->with('success', 'Absensi berhasil dihapus');
+    }
+
+    // Show detail absensi (Admin)
+    public function show($id)
+    {
+        $absensi = Absensi::with('guru')->findOrFail($id);
+        return view('admin.absensi.show', compact('absensi'));
+    }
+
+    // Approve izin/sakit (Admin)
+    public function approve($id)
+    {
+        $absensi = Absensi::findOrFail($id);
+        if (!in_array($absensi->status, ['Izin', 'Sakit'])) {
+            return back()->with('error', 'Hanya izin/sakit yang bisa di-approve');
+        }
+        $absensi->update(['approval_status' => 'approved']);
+        return back()->with('success', 'Izin/Sakit telah disetujui');
+    }
+
+    // Reject izin/sakit (Admin)
+    public function reject(Request $request, $id)
+    {
+        $request->validate(['approval_note' => 'nullable|string|max:500']);
+        $absensi = Absensi::findOrFail($id);
+        if (!in_array($absensi->status, ['Izin', 'Sakit'])) {
+            return back()->with('error', 'Hanya izin/sakit yang bisa di-reject');
+        }
+        $absensi->update([
+            'approval_status' => 'rejected',
+            'approval_note' => $request->approval_note,
+        ]);
+        return back()->with('success', 'Izin/Sakit telah ditolak');
     }
 
     /* =====================================================
@@ -140,7 +181,7 @@ class AbsensiController extends Controller
             ->whereDate('tanggal', $today)
             ->first();
 
-        if (! $absensi || ! $absensi->jam_datang) {
+        if (!$absensi || !$absensi->jam_datang) {
             return redirect()->back()
                 ->with('error', 'Anda belum absen masuk');
         }

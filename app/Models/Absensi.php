@@ -15,6 +15,10 @@ class Absensi extends Model
         'jam_datang',
         'jam_pulang',
         'status',
+        'keterangan',
+        'bukti',
+        'approval_status',
+        'approval_note',
     ];
 
     public function guru()

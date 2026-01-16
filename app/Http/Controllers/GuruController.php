@@ -7,9 +7,17 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 class GuruController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $guru = Guru::all();
+        $query = Guru::query();
+        if ($request->filled('q')) {
+            $q = $request->q;
+            $query->where(function ($qry) use ($q) {
+                $qry->where('nama', 'like', "%{$q}%")
+                    ->orWhere('nip', 'like', "%{$q}%");
+            });
+        }
+        $guru = $query->orderBy('nama')->paginate(15);
         return view('admin.guru.index', compact('guru'));
     }
 
