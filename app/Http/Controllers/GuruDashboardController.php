@@ -23,13 +23,7 @@ class GuruDashboardController extends Controller
             ->where('tanggal', $hariIni)
             ->first();
 
-<<<<<<< HEAD
-        // KIRIM SEMUA KE VIEW
-=======
-        // Waktu server sekarang untuk inisialisasi tampilan
-        $jamSekarang = Carbon::now()->format('H:i:s');
-
->>>>>>> bdd3300716baf51c08f4567ac1e83e08743c750d
+        // Kirim ke view
         return view('guru.dashboard', compact(
             'guru',
             'absensiHariIni',
