@@ -22,10 +22,14 @@ class GuruDashboardController extends Controller
             ->whereDate('tanggal', $hariIni)
             ->first();
 
+        // Waktu server sekarang untuk inisialisasi tampilan
+        $jamSekarang = Carbon::now()->format('H:i:s');
+
         return view('guru.dashboard', compact(
             'guru',
             'absensiHariIni',
-            'hariIni'
+            'hariIni',
+            'jamSekarang'
         ));
     }
 }

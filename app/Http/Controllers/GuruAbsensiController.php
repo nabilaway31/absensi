@@ -28,9 +28,8 @@ class GuruAbsensiController extends Controller
         $tanggal = Carbon::today()->format('Y-m-d');
         $jamSekarang = Carbon::now()->format('H:i');
 
-        // 🔒 Kunci jam absen masuk
-        if ($jamSekarang < '05:00' || $jamSekarang > '09:00') {
-            return back()->with('error', 'Absen masuk hanya bisa antara jam 05:00 - 09:00');
+        if ($jamSekarang < '05:00') {
+            return back()->with('error', 'Absen masuk hanya bisa mulai jam 05:00');
         }
 
         // Cek sudah absen atau belum
@@ -64,7 +63,7 @@ class GuruAbsensiController extends Controller
     /**
      * =========================
      * ABSEN PULANG
-     * Minimal jam 15:00
+     * Tanpa batas waktu
      * =========================
      */
     public function absenPulang()
@@ -84,11 +83,6 @@ class GuruAbsensiController extends Controller
 
         if ($absensi->jam_pulang) {
             return back()->with('error', 'Anda sudah absen pulang');
-        }
-
-        // 🔒 Kunci jam pulang
-        if ($jamSekarang < '15:00') {
-            return back()->with('error', 'Absen pulang hanya bisa setelah jam 15:00');
         }
 
         $absensi->update([
